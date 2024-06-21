@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Performance Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 50%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .green {
+            background-color: lightgreen;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .red {
+            background-color: salmon;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Performance Monitoring</h1>
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Current System Time</td>
+            <td id="current_time"></td>
+        </tr>
+        <tr>
+            <td>System Uptime</td>
+            <td id="uptime"></td>
+        </tr>
+        <tr>
+            <td>Disk Space</td>
+            <td id="disk_space"></td>
+        </tr>
+        <tr>
+            <td>Hostname</td>
+            <td id="hostname"></td>
+        </tr>
+        <tr>
+            <td>IP Address</td>
+            <td id="ip_address"></td>
+        </tr>
+        <tr>
+            <td>Operating System</td>
+            <td id="os_info"></td>
+        </tr>
+        <tr>
+            <td>CPU Model</td>
+            <td id="cpu_model"></td>
+        </tr>
+        <tr>
+            <td>CPU Cores</td>
+            <td id="cpu_cores"></td>
+        </tr>
+        <tr>
+            <td>Memory Total</td>
+            <td id="memory_total"></td>
+        </tr>
+        <tr>
+            <td>Memory Used</td>
+            <td id="memory_used"></td>
+        </tr>
+    </table>
+    <h2>System Status</h2>
+    <div id="system_status" class="green">
+        <h3>System is operating normally</h3>
+    </div>
+
+    <script>
+        // JavaScript to fetch and update system information
+        function updateSystemInfo() {
+            fetch('C:\M122\Aufgabe_2\System_Leistungsauswertung_html.sh')
+                .then(response => response.text())
+                .then(data => {
+                    const rows = data.trim().split('\n');
+                    rows.forEach(row => {
+                        const [key, value] = row.split('|').map(item => item.trim());
+                        const element = document.getElementById(key.replace(/ /g, '_').toLowerCase());
+                        if (element) {
+                            element.textContent = value;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching system info:', error));
+        }
+
+        setInterval(updateSystemInfo, 30000); // Update every 30 seconds
+
+        // Function to update system status based on thresholds (dummy example)
+        function updateSystemStatus() {
+            const memoryUsed = parseFloat(document.getElementById('memory_used').textContent);
+            const memoryTotal = parseFloat(document.getElementById('memory_total').textContent);
+            const usagePercent = (memoryUsed / memoryTotal) * 100;
+
+            const systemStatus = document.getElementById('system_status');
+            if (usagePercent < 70) {
+                systemStatus.className = 'green';
+                systemStatus.innerHTML = '<h3>System is operating normally</h3>';
+            } else if (usagePercent >= 70 && usagePercent < 90) {
+                systemStatus.className = 'yellow';
+                systemStatus.innerHTML = '<h3>System is under moderate load</h3>';
+            } else {
+                systemStatus.className = 'red';
+                systemStatus.innerHTML = '<h3>System is under heavy load</h3>';
+            }
+        }
+
+        setInterval(updateSystemStatus, 30000); // Update system status every 30 seconds
+    </script>
+</body>
+</html>
