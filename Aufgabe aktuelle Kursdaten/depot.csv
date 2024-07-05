@@ -1,0 +1,7 @@
+Asset,Type,Quantity,PurchasePrice
+Novartis,Stock,10,85
+Nestle,Stock,15,110
+ABB,Stock,20,30
+Swisscom,Stock,5,500
+USD,Currency,3000,0.92
+Bitcoin,Crypto,0.1,30000
